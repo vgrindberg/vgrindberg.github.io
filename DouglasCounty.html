@@ -1,0 +1,42 @@
+<html>
+    <head> 
+        <meta charset="utf-8" /> 
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" /> 
+        <title>Douglas County, Oregon</title> 
+        <style> 
+          html, 
+          body { 
+            background-color: var(--calcite-ui-foreground-2); 
+            padding: 0; 
+            margin: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            }
+        </style>
+        <script type="module" src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js"></script>
+        <script src="https://js.arcgis.com/4.34/"></script>
+        <script type="module" src="https://js.arcgis.com/4.34/map-components/"></script>
+    </head> 
+    <body class="calcite-mode-light">
+      <calcite-shell>
+        <calcite-shell-panel slot="panel-start">
+          <arcgis-legend reference-element="thismap" legend-style="classic" hide-layers-not-in-current-view></arcgis-legend>
+        <arcgis-layer-list reference-element="thismap" drag-enabled></arcgis-layer-list>
+        </calcite-shell-panel>
+      <arcgis-map id="thismap" item-id="3438b58e16a94ce1bd2f3adeddf02f47" zoom="14" center="-123.305, 43.39">
+        <arcgis-zoom slot="bottom-left" layout="vertical" visual-scale="l"></arcgis-zoom>
+      </arcgis-map>
+     </calcite-shell>
+      <script type="module">
+        const esriConfig = await $arcgis.import("@arcgis/core/config.js");
+        esriConfig.apiKey = "AAPTagkb2Zm4YSaB-Q_Eh-WC00w..jWWHN5Y5w0lptYDha8LVMK2mV9nZeFOccvtYcKio_4alSZzokCcY--7xgGtDAWM2hb6tLfq5YlJ29JqO1CADo81VLYMHgL0DplYFhNzzP-qqG8clYBI5kNpGl6wRaZgbJvx3fLT6bJjZ8sD-vAL3lBhBWBQ02pUJT31Q-fl-wuhUEFx1JCxMgNmVeqvm7yPXftsUsCzHpDZZC3RATuBIpvLo1pp-DwHRqQGVYPBAxZlz4OQNWpsRyj_urds.AT1_stwWKpCr";
+        const map = document.querySelector("arcgis-map");
+        map.addEventListener("arcgisViewReadyChange", (event) => {          map.addEventListener("arcgisViewClick", (event) => {
+          map.popupDisabled = true;
+          if (map.basemap.id == "gray-3d"){map.basemap = "dark-gray-3d";} else {map.basemap = "gray-3d";}
+        });
+      });
+        esriConfig.portalUrl = "https://gis.co.douglas.or.us/portal";
+      </script>
+    </body>
+</html>
