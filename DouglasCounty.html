@@ -20,11 +20,16 @@
     <body class="calcite-mode-light">
       <calcite-shell>
         <calcite-shell-panel slot="panel-start">
-          <arcgis-legend reference-element="thismap" legend-style="classic" hide-layers-not-in-current-view></arcgis-legend>
-        <arcgis-layer-list reference-element="thismap" drag-enabled></arcgis-layer-list>
+            <arcgis-layer-list reference-element="thismap" drag-enabled></arcgis-layer-list>
         </calcite-shell-panel>
       <arcgis-map id="thismap" item-id="3438b58e16a94ce1bd2f3adeddf02f47" zoom="14" center="-123.305, 43.39">
         <arcgis-zoom slot="bottom-left" layout="vertical" visual-scale="l"></arcgis-zoom>
+              <arcgis-expand slot="bottom-right">
+          <arcgis-legend reference-element="thismap" legend-style="classic" hide-layers-not-in-current-view></arcgis-legend>
+        </arcgis-expand>
+        <arcgis-expand slot="bottom-right">
+          <arcgis-bookmarks></arcgis-bookmarks>
+        </arcgis-expand>
       </arcgis-map>
      </calcite-shell>
       <script type="module">
