@@ -1,0 +1,96 @@
+<html>
+    <head> 
+        <meta charset="utf-8" /> 
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" /> 
+        <title>Douglas County, Oregon</title> 
+        <style> 
+          html, 
+          body { 
+            background-color: var(--calcite-ui-foreground-2); 
+            padding: 0; 
+            margin: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            }
+          calcite-shell-panel[slot="panel-bottom"] {
+            width: 100%;
+            max-width: 100%;
+            --calcite-shell-panel-max-width: 100%;
+            --calcite-shell-panel-min-width: 100%;
+            --calcite-shell-panel-width: 100%;
+}
+        </style>
+        <script type="module" src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js"></script>
+        <script src="https://js.arcgis.com/4.34/"></script>
+        <script type="module" src="https://js.arcgis.com/4.34/map-components/"></script>
+    </head> 
+    <body class="calcite-mode-light">
+      <calcite-shell>
+        <calcite-shell-panel slot="panel-bottom" display-mode="float" id="profilePanel">
+            <arcgis-elevation-profile id="elevationProfile" reference-element="thismap" style="width: 100%; height: 20%;"></arcgis-elevation-profile>
+        </calcite-shell-panel>
+      <arcgis-map id="thismap" basemap="terrain" zoom="15" center="-123.305, 43.39">
+        <arcgis-zoom slot="bottom-left" layout="vertical" visual-scale="l"></arcgis-zoom>
+        <arcgis-search slot="top-right"></arcgis-search>
+        <arcgis-expand slot="bottom-right">
+          <arcgis-legend reference-element="thismap" legend-style="classic" hide-layers-not-in-current-view></arcgis-legend>
+        </arcgis-expand>
+        <arcgis-popup slot="top-left" reference-element="thismap"></arcgis-popup> 
+      </arcgis-map>
+     </calcite-shell>
+      
+      <script type="module">
+        const esriConfig = await $arcgis.import("@arcgis/core/config.js");
+        esriConfig.apiKey = "AAPTagkb2Zm4YSaB-Q_Eh-WC00w..jWWHN5Y5w0lptYDha8LVMK2mV9nZeFOccvtYcKio_4alSZzokCcY--7xgGtDAWM2hb6tLfq5YlJ29JqO1CADo81VLYMHgL0DplYFhNzzP-qqG8clYBI5kNpGl6wRaZgbJvx3fLT6bJjZ8sD-vAL3lBhBWBQ02pUJT31Q-fl-wuhUEFx1JCxMgNmVeqvm7yPXftsUsCzHpDZZC3RATuBIpvLo1pp-DwHRqQGVYPBAxZlz4OQNWpsRyj_urds.AT1_stwWKpCr";
+        esriConfig.portalUrl = "https://gis.co.douglas.or.us/portal";
+        const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
+        const MapImageLayer = await $arcgis.import("@arcgis/core/layers/MapImageLayer.js");
+        const VectorTileLayer = await $arcgis.import("@arcgis/core/layers/VectorTileLayer.js");
+        const ElevationLayer = await $arcgis.import("@arcgis/core/layers/ElevationLayer.js")
+        
+        const trailsPopup = {
+          title: "Trail: {Name}",
+          content: [{type: "fields",
+          fieldInfos:[{fieldName: "Name"},{fieldName: "Park"},{fieldName: "Comment"},{fieldName: "Number"},{fieldName: "Condition"},{fieldName: "Attribution"},{fieldName: "Agency"},{fieldName: "TotalMiles"},{fieldName: "SectionMiles"},{fieldName: "ConditionInfo"},{fieldName: "TrailType"}]
+          }]}
+        const placesPopup = {
+          title: "{Name} @ {PlaceName}",
+          content: [{type: "fields",
+          fieldInfos:[{fieldName: "Name"},{fieldName: "PlaceName"},{fieldName: "Description"},{fieldName: "FacilityType"}]},
+            {type: "attachments"}]}
+        const popupComponent = document.querySelector("arcgis-popup");
+        const arcgisMap = document.querySelector("arcgis-map");
+        const profileElement = document.querySelector("arcgis-elevation-profile");
+  
+        await arcgisMap.componentOnReady();
+        await profileElement.componentOnReady();
+        
+          arcgisMap.map.ground.layers.add(
+            new ElevationLayer({ url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer" }))
+          const baseVector = new VectorTileLayer({portalItem:{id: "dd271a466f1c4071abfd1128bdcfdd78"}});
+          const pois = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/DC_Expanded_POI_List/MapServer/2"});
+          const places = new MapImageLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer", sublayers:[{id:0,visible:true, popupTemplate: placesPopup}]});
+          const trails = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Parks/DCParks/MapServer/6", popupTemplate: trailsPopup});
+          arcgisMap.map.add(baseVector);
+          arcgisMap.map.add(pois);
+          arcgisMap.map.add(places);
+          arcgisMap.map.add(trails);
+        
+          const profilePanel = document.querySelector("#profilePanel");
+          profileElement.profiles = [{type: "ground"}];
+          const view = arcgisMap.view;
+        
+          view.on("click", async (event) => {
+            const hitResult = await view.hitTest(event);
+            const hit = hitResult.results.find(
+              r => r.type === "graphic" && r.graphic.geometry?.type === "polyline");
+            if (hit) {
+              profileElement.input = hit.graphic;
+              profilePanel.collapsed = false;
+              view.popupEnabled = false;
+              setTimeout(() => view.popupEnabled = true, 100)
+            }
+          })
+      </script>
+    </body>
+</html>
