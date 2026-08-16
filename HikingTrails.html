@@ -10,7 +10,7 @@
             padding: 0; 
             margin: 0; 
             width: 100vw; 
-            height: 100vh;}
+            height: 8%;}
           calcite-shell-panel[slot="panel-bottom"] {
             width: 100%;
             max-width: 100%;
@@ -61,6 +61,11 @@
           content: [{type: "fields",
           fieldInfos:[{fieldName: "Name"},{fieldName: "PlaceName"},{fieldName: "Description"},{fieldName: "FacilityType"}]},
             {type: "attachments"}]}
+        const hazardPopup = {
+          title: "Severity {severity} - {hazardneed}",
+          content: [{type: "fields",
+          fieldInfos:[{fieldName: "hazardneed"},{fieldName: "severity"},{fieldName: "description"},]},
+            {type: "attachments"}]}
         const popupComponent = document.querySelector("arcgis-popup");
         const arcgisMap = document.querySelector("arcgis-map");
         const profileElement = document.querySelector("arcgis-elevation-profile");
@@ -77,10 +82,12 @@
           const pois = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/DC_Expanded_POI_List/MapServer/2", minScale: "25000" });
           const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "4800"});
           const trails = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Parks/DCParks/MapServer/6", popupTemplate: trailsPopup, minScale: "200000"});
+          const hazards = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Hosted/survey123_3829e8e36dd9437883d13977f525fd96_results/FeatureServer/0", popupTemplate: hazardPopup, minscale: "100000"})
           arcgisMap.map.add(baseVector);
           arcgisMap.map.add(pois);
           arcgisMap.map.add(places);
           arcgisMap.map.add(trails);
+          arcgisMap.map.add(hazards);
         
           searchElement.sources = [{
               layer: trails, searchFields: ["Name"], suggestionTemplate: "{Name}", exactMatch: false, placeholder: "Example: Mt. Thielsen"
