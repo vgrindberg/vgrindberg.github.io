@@ -69,6 +69,8 @@
             {type: "attachments"}]}
         const popupComponent = document.querySelector("arcgis-popup");
         const arcgisMap = document.querySelector("arcgis-map");
+        const urlParams = new URLSearchParams(window.location.search);
+        const trailParam = urlParams.get("trail"); // e.g. "1414.4"
         const profileElement = document.querySelector("arcgis-elevation-profile");
         const searchElement = document.querySelector("arcgis-search");
   
@@ -89,7 +91,25 @@
           arcgisMap.map.add(places);
           arcgisMap.map.add(trails);
           arcgisMap.map.add(hazards);
-        
+
+          async function zoomToTrailByNumber(numberValue) {
+              const result = await trails.queryFeatures({
+                where: `Number = '${numberValue}'`,   // use quotes if Number is a text field
+                outFields: ["*"],
+                returnGeometry: true
+              });
+
+              if (result.features.length > 0) {
+                const feature = result.features[0];
+                await view.goTo(feature.geometry, { duration: 800 });
+              } else {
+                console.warn(`No trail found with Number = ${numberValue}`);
+              }
+            }
+
+if (trailParam) {
+  await zoomToTrailByNumber(trailParam);
+}
           searchElement.sources = [{
               layer: trails, searchFields: ["Name"], suggestionTemplate: "{Name}", exactMatch: false, placeholder: "Example: Mt. Thielsen"
             },{
