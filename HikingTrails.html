@@ -237,7 +237,8 @@
               outFields: ["*"],
               returnGeometry: true
             });
-        
+
+        try {
             if (result.features.length > 0) {
               await selectTrailFeature(result.features[0]);
             } else {
@@ -247,6 +248,8 @@
         
           if (trailParam) {
             await zoomToTrailByNumber(trailParam);
+          } catch(err){
+              showError("16c: query FAILED - " + err.message);
           }
 
       </script>
