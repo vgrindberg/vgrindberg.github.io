@@ -89,7 +89,7 @@
      </calcite-shell>
       
       <script type="module">
-        window.showError ? showError("1: script started") : alert("1: script started");
+        //window.showError ? showError("1: script started") : alert("1: script started");
         const esriConfig = await $arcgis.import("@arcgis/core/config.js");
           //showError("2: esriConfig loaded");
         esriConfig.apiKey = "AAPTagkb2Zm4YSaB-Q_Eh-WC00w..jWWHN5Y5w0lptYDha8LVMK2mV9nZeFOccvtYcKio_4alSZzokCcY--7xgGtDAWM2hb6tLfq5YlJ29JqO1CADo81VLYMHgL0DplYFhNzzP-qqG8clYBI5kNpGl6wRaZgbJvx3fLT6bJjZ8sD-vAL3lBhBWBQ02pUJT31Q-fl-wuhUEFx1JCxMgNmVeqvm7yPXftsUsCzHpDZZC3RATuBIpvLo1pp-DwHRqQGVYPBAxZlz4OQNWpsRyj_urds.AT1_stwWKpCr";
@@ -128,13 +128,13 @@
         await arcgisMap.componentOnReady();
           //showError("6: arcgisMap ready");
         const testView = arcgisMap.view;
-        showError("6a: view object exists = " + !!testView);
+        //showError("6a: view object exists = " + !!testView);
         
         try {
           await testView.when();
-          showError("6b: view.when() resolved, ready=" + testView.ready);
+          //showError("6b: view.when() resolved, ready=" + testView.ready);
         } catch (err) {
-          showError("6c: view.when() REJECTED - " + err.message);
+          //showError("6c: view.when() REJECTED - " + err.message);
         }
           
         await profileElement.componentOnReady();
