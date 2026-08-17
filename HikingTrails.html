@@ -178,8 +178,11 @@
             profilePanel.collapsed = false;
            // view.popupEnabled = false; - not needed anymore
            // setTimeout(() => view.popupEnabled = true, 100);
-            await view.goTo(feature.geometry, { duration: 800 });
-          
+          try {
+            await view.goTo(feature.geometry, { duration: 0 });
+          } catch (err) {
+            console.warn("goTo animation failed, continuing without animation:", err);
+          }
             if (trailInfoEl) {
               renderTrailInfo(feature);
             }
