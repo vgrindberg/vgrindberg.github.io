@@ -89,14 +89,17 @@
      </calcite-shell>
       
       <script type="module">
+        window.showError ? showError("1: script started") : alert("1: script started");
         const esriConfig = await $arcgis.import("@arcgis/core/config.js");
           showError("2: esriConfig loaded");
         esriConfig.apiKey = "AAPTagkb2Zm4YSaB-Q_Eh-WC00w..jWWHN5Y5w0lptYDha8LVMK2mV9nZeFOccvtYcKio_4alSZzokCcY--7xgGtDAWM2hb6tLfq5YlJ29JqO1CADo81VLYMHgL0DplYFhNzzP-qqG8clYBI5kNpGl6wRaZgbJvx3fLT6bJjZ8sD-vAL3lBhBWBQ02pUJT31Q-fl-wuhUEFx1JCxMgNmVeqvm7yPXftsUsCzHpDZZC3RATuBIpvLo1pp-DwHRqQGVYPBAxZlz4OQNWpsRyj_urds.AT1_stwWKpCr";
         esriConfig.portalUrl = "https://gis.co.douglas.or.us/portal";
+          showError("3: apiKey/portalUrl set");
         const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
         const MapImageLayer = await $arcgis.import("@arcgis/core/layers/MapImageLayer.js");
         const VectorTileLayer = await $arcgis.import("@arcgis/core/layers/VectorTileLayer.js");
         const ElevationLayer = await $arcgis.import("@arcgis/core/layers/ElevationLayer.js")
+          showError("4: layer classes imported");
         
         const trailsPopup = {
           title: "Trail: {Name}",
@@ -120,19 +123,22 @@
         const profileElement = document.querySelector("arcgis-elevation-profile");
         const searchElement = document.querySelector("arcgis-search");
         const trailInfoEl = document.querySelector("#trailInfo");
+          showError("5: DOM queries done, trailParam=" + trailParam);
   
         await arcgisMap.componentOnReady();
-          showError("3: arcgisMap ready");
+          showError("6: arcgisMap ready");
         await profileElement.componentOnReady();
-          showError("4: profileElement ready");
+          showError("7: profileElement ready");
         await searchElement.componentOnReady();
-          showError("5: searchElement ready");
+          showError("8: searchElement ready");
         await popupComponent.componentOnReady();
+          showError("9: popupComponent ready");
         profileElement.referenceElement = arcgisMap;
-          showError("6: popupComponent ready");
+          showError("10: referenceElement set");
         
         arcgisMap.map.ground.layers.add(
           new ElevationLayer({ url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer" }))
+          showError("11: elevation layer added");
           const baseVector = new VectorTileLayer({portalItem:{id: "dd271a466f1c4071abfd1128bdcfdd78"}});
           const pois = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/DC_Expanded_POI_List/MapServer/2", minScale: "25000" });
           const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "24000"});
@@ -143,12 +149,14 @@
           arcgisMap.map.add(places);
           arcgisMap.map.add(trails);
           arcgisMap.map.add(hazards);
+          showError("12: all layers created and added");
 
           searchElement.sources = [{
               layer: trails, searchFields: ["Name"], suggestionTemplate: "{Name}", exactMatch: false, placeholder: "Example: Mt. Thielsen"
             },{
               layer: places, searchFields: ["Name"], suggestionTemplate: "{Name}", exactMatch: false
             }]
+          showError("13: search sources set");
         
           const profilePanel = document.querySelector("#profilePanel");
           profileElement.profiles = [{type: "ground"}];
