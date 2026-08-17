@@ -44,7 +44,27 @@
         <script type="module" src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js"></script>
         <script src="https://js.arcgis.com/4.34/"></script>
         <script type="module" src="https://js.arcgis.com/4.34/map-components/"></script>
-
+        <script>
+          window.addEventListener('error', function (e) {
+            showError('JS Error: ' + e.message + ' (' + e.filename + ':' + e.lineno + ')');
+          });
+          window.addEventListener('unhandledrejection', function (e) {
+            showError('Promise Rejection: ' + (e.reason?.message || e.reason));
+          });
+        
+          function showError(msg) {
+            let box = document.getElementById('debug-box');
+            if (!box) {
+              box = document.createElement('div');
+              box.id = 'debug-box';
+              box.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;' +
+                'background:red;color:white;font-family:monospace;font-size:12px;' +
+                'padding:10px;white-space:pre-wrap;max-height:50vh;overflow:auto;';
+              document.body ? document.body.prepend(box) : document.addEventListener('DOMContentLoaded', () => document.body.prepend(box));
+            }
+            box.textContent += msg + '\n\n';
+          }
+        </script>
 
 
     </head> 
