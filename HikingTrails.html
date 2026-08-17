@@ -55,7 +55,7 @@
               box = document.createElement('div');
               box.id = 'debug-box';
               box.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;' +
-                'background:red;color:white;font-family:monospace;font-size:12px;' +
+                'background:blue;color:white;font-family:monospace;font-size:12px;' +
                 'padding:10px;white-space:pre-wrap;max-height:50vh;overflow:auto;';
               document.body ? document.body.prepend(box) : document.addEventListener('DOMContentLoaded', () => document.body.prepend(box));
             }
@@ -229,33 +229,24 @@
           }
         })
         
-        async function zoomToTrailByNumber(numberValue) {
-          const safeValue = numberValue.replace(/'/g, "");
-          showError("16a: querying trails for Number=" + safeValue);
-        
-          const queryPromise = trails.queryFeatures({
-            where: `Number = '${safeValue}'`,
-            outFields: ["*"],
-            returnGeometry: true
-          });
-        
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("queryFeatures timed out after 10s")), 10000)
-          );
-        
-          try {
-            const result = await Promise.race([queryPromise, timeoutPromise]);
-            showError("16b: query resolved, features=" + result.features.length);
+          async function zoomToTrailByNumber(numberValue) {
+            const safeValue = numberValue.replace(/'/g, "");
+            const result = await trails.queryFeatures({
+              where: `Number = '${safeValue}'`,   // remove quotes in where clause if Number is numeric
+              outFields: ["*"],
+              returnGeometry: true
+            });
         
             if (result.features.length > 0) {
               await selectTrailFeature(result.features[0]);
             } else {
               console.warn(`No trail found with Number = ${numberValue}`);
             }
-          } catch (err) {
-            showError("16c: query FAILED - " + err.message);
           }
-        }
+        
+          if (trailParam) {
+            await zoomToTrailByNumber(trailParam);
+          }
 
       </script>
     </body>
