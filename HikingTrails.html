@@ -21,7 +21,7 @@
           arcgis-elevation-profile {
             display: block;
             width: 100%;
-            height: 200px;}
+            height: 150px;}
         </style>
         <script type="module" src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js"></script>
         <script src="https://js.arcgis.com/4.34/"></script>
@@ -38,7 +38,7 @@
         </arcgis-expand>
         <arcgis-popup slot="top-left" reference-element="thismap"></arcgis-popup> 
       </arcgis-map>
-        <calcite-shell-panel slot="panel-bottom" display-mode="float" id="profilePanel">
+        <calcite-shell-panel slot="panel-bottom" display-mode="float" id="profilePanel" collapsed>
           <arcgis-elevation-profile id="elevationProfile" reference-element="thismap" style="width: 100%; height: 20%;"></arcgis-elevation-profile>
        </calcite-shell-panel>
      </calcite-shell>
