@@ -101,9 +101,21 @@
           const profilePanel = document.querySelector("#profilePanel");
           profileElement.profiles = [{type: "ground"}];
           const view = arcgisMap.view;
-          
-          async function zoomToTrailByNumber(numberValue) {
-              const result = await trails.queryFeatures({
+        
+          view.on("click", async (event) => {
+            const hitResult = await view.hitTest(event);
+            const hit = hitResult.results.find(
+              r => r.type === "graphic" && r.graphic.geometry?.type === "polyline");
+            if (hit) {
+              profileElement.input = hit.graphic;
+              profilePanel.collapsed = false;
+              view.popupEnabled = false;
+              setTimeout(() => view.popupEnabled = true, 100)
+              await view.goTo(hit.graphic.geometry, {duration: 800});
+            }
+          })
+        async function zoomToTrailByNumber(numberValue) {
+            const result = await trails.queryFeatures({
                 where: `Number = '${numberValue}'`,   // use quotes if Number is a text field
                 outFields: ["*"],
                 returnGeometry: true
@@ -120,19 +132,6 @@
 if (trailParam) {
   await zoomToTrailByNumber(trailParam);
 }
-        
-          view.on("click", async (event) => {
-            const hitResult = await view.hitTest(event);
-            const hit = hitResult.results.find(
-              r => r.type === "graphic" && r.graphic.geometry?.type === "polyline");
-            if (hit) {
-              profileElement.input = hit.graphic;
-              profilePanel.collapsed = false;
-              view.popupEnabled = false;
-              setTimeout(() => view.popupEnabled = true, 100)
-              await view.goTo(hit.graphic.geometry, {duration: 800});
-            }
-          })
       </script>
     </body>
 </html>
