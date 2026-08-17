@@ -162,6 +162,7 @@
           profileElement.profiles = [{type: "ground"}];
           const view = arcgisMap.view;
           view.popupEnabled = false;
+          showError("14: view acquired, popupEnabled=false");
       
           // Turns "TotalMiles" -> "Total Miles", "ConditionInfo" -> "Condition Info", etc.
           function humanizeFieldName(fieldName) {
@@ -242,11 +243,15 @@
               console.warn(`No trail found with Number = ${numberValue}`);
             }
           }
-        
-          if (trailParam) {
-            await zoomToTrailByNumber(trailParam);
-          }
-
+        showError("15: all functions defined, about to check trailParam");
+              if (trailParam) {
+                showError("16: trailParam present, calling zoomToTrailByNumber");
+                await zoomToTrailByNumber(trailParam);
+                showError("17: zoomToTrailByNumber finished");
+              } else {
+                showError("16: no trailParam, skipping zoom");
+              }
+         showError("18: script fully finished");
       </script>
     </body>
 </html>
