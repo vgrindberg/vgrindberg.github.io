@@ -20,9 +20,25 @@
           calcite-shell-panel[slot="panel-bottom"]:not([collapsed]) {
             height: 42.5%;}
           arcgis-elevation-profile {
-            display: block;
-            width: 100%;
-            height: 150px;}
+            #profileRow {
+              display: flex;
+              width: 100%;
+              height: 100%;
+            }
+            #elevationProfile {
+              flex: 2;
+              height: 100%;
+            }
+            #trailInfo {
+              flex: 1;
+              height: 100%;
+              overflow: auto;
+              padding: 12px;
+              border-left: 1px solid #ccc;
+              background: white;
+              font-family: sans-serif;
+              font-size: 13px;
+            }}
         </style>
         <script type="module" src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js"></script>
         <script src="https://js.arcgis.com/4.34/"></script>
@@ -43,7 +59,10 @@
         <arcgis-popup slot="top-left" reference-element="thismap"></arcgis-popup> 
       </arcgis-map>
         <calcite-shell-panel slot="panel-bottom" display-mode="float" id="profilePanel" collapsed>
-          <arcgis-elevation-profile id="elevationProfile" reference-element="thismap" style="width: 100%; height: 20%;"></arcgis-elevation-profile>
+            <div id="profileRow">
+                <arcgis-elevation-profile id="elevationProfile" reference-element="thismap"></arcgis-elevation-profile>
+            <div id="trailInfo">Select a trail to see details.</div>
+            </div>
        </calcite-shell-panel>
      </calcite-shell>
       
