@@ -57,13 +57,13 @@
         <arcgis-expand slot="bottom-right">
           <arcgis-legend reference-element="thismap" legend-style="classic" hide-layers-not-in-current-view></arcgis-legend>
         </arcgis-expand>
-        <arcgis-popup slot="top-left" reference-element="thismap"></arcgis-popup> 
+        <arcgis-popup reference-element="thismap" ></arcgis-popup> 
       </arcgis-map>
         <calcite-shell-panel slot="panel-bottom" display-mode="float" id="profilePanel" collapsed>
-            <div id="profileRow">
-                <arcgis-elevation-profile id="elevationProfile" reference-element="thismap"></arcgis-elevation-profile>
+          <div id="profileRow">
+            <arcgis-elevation-profile id="elevationProfile" reference-element="thismap"></arcgis-elevation-profile>
             <div id="trailInfo">Select a trail to see details.</div>
-            </div>
+          </div>
        </calcite-shell-panel>
      </calcite-shell>
       
@@ -97,14 +97,16 @@
         const trailParam = urlParams.get("trail"); // e.g. "1414.4"
         const profileElement = document.querySelector("arcgis-elevation-profile");
         const searchElement = document.querySelector("arcgis-search");
+        const trailInfoEl = document.querySelector("#trailInfo");
   
         await arcgisMap.componentOnReady();
         await profileElement.componentOnReady();
         await searchElement.componentOnReady();
+        await popupComponent.componentOnReady();
         profileElement.referenceElement = arcgisMap;
         
-          arcgisMap.map.ground.layers.add(
-            new ElevationLayer({ url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer" }))
+        arcgisMap.map.ground.layers.add(
+          new ElevationLayer({ url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer" }))
           const baseVector = new VectorTileLayer({portalItem:{id: "dd271a466f1c4071abfd1128bdcfdd78"}});
           const pois = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/DC_Expanded_POI_List/MapServer/2", minScale: "25000" });
           const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "24000"});
@@ -125,23 +127,40 @@
           const profilePanel = document.querySelector("#profilePanel");
           profileElement.profiles = [{type: "ground"}];
           const view = arcgisMap.view;
-         // Shared logic for selecting a trail, whether from a click or a URL param
+          view.popupEnabled = false;
+      
+          // Turns "TotalMiles" -> "Total Miles", "ConditionInfo" -> "Condition Info", etc.
+          function humanizeFieldName(fieldName) {
+              return fieldName.replace(/([a-z])([A-Z])/g, '$1 $2');
+          }
+        
+          function renderTrailInfo(feature) {
+              const a = feature.attributes;
+              const fieldInfos = trailsPopup.content[0].fieldInfos;
+              const titleHtml = trailsPopup.title.replace(/{(\w+)}/g, (_, key) => a[key] ?? "");
+              const rowsHtml = fieldInfos
+                  .map(fi => {
+                      const value = a[fi.fieldName];
+                      //if (value === null || value === undefined || value === "") return "";
+                          return `<div style="margin-bottom:4px;"><strong>${humanizeFieldName(fi.fieldName)}:</strong> ${value}</div>`;
+                      })
+                      .join("");
+                  
+                      trailInfoEl.innerHTML = `
+                      <h4 style="margin:0 0 8px;">${titleHtml}</h4>
+                      ${rowsHtml}
+                    `;
+                  }
+
           async function selectTrailFeature(feature) {
             profileElement.input = feature;
             profilePanel.collapsed = false;
-            view.popupEnabled = false;
-            setTimeout(() => view.popupEnabled = true, 100);
+           // view.popupEnabled = false; - not needed anymore
+           // setTimeout(() => view.popupEnabled = true, 100);
             await view.goTo(feature.geometry, { duration: 800 });
-        
-            const a = feature.attributes;
-            if (trailInfoEl && a) {
-              trailInfoEl.innerHTML = `
-                <h4 style="margin:0 0 8px;">${a.Name ?? "Trail"}</h4>
-                <div><strong>Number:</strong> ${a.Number ?? "-"}</div>
-                <div><strong>Condition:</strong> ${a.Condition ?? "-"}</div>
-                <div><strong>Total Miles:</strong> ${a.TotalMiles ?? "-"}</div>
-                <div><strong>Agency:</strong> ${a.Agency ?? "-"}</div>
-              `;
+          
+            if (trailInfoEl) {
+              renderTrailInfo(feature);
             }
           }
         
@@ -150,9 +169,27 @@
             const hit = hitResult.results.find(
               r => r.type === "graphic" && r.graphic.geometry?.type === "polyline");
             if (hit) {
-              await selectTrailFeature(hit.graphic);
+              view.closePopup();
+              const objectId = hit.graphic.attributes[trails.objectIdField];
+              const result = await trails.queryFeatures({
+                objectIds: [objectId],
+                outFields: ["*"],
+                returnGeometry: true
+              });
+            if (result.features.length > 0) {
+              await selectTrailFeature(result.features[0]);
             }
-          })
+        }   else {
+            // Not a trail — open the normal popup for whatever else was clicked (POIs, places, hazards)
+            const otherHit = hitResult.results.find(r => r.type === "graphic");
+            if (otherHit) {
+              view.openPopup({
+                features: [otherHit.graphic],
+                location: event.mapPoint
+              });
+            }
+          }
+        })
         
           async function zoomToTrailByNumber(numberValue) {
             const safeValue = numberValue.replace(/'/g, "");
