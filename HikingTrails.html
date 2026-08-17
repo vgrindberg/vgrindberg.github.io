@@ -127,6 +127,18 @@
   
         await arcgisMap.componentOnReady();
           showError("6: arcgisMap ready");
+        const testView = arcgisMap.view;
+        showError("6a: view object exists = " + !!testView);
+        
+        try {
+          await testView.when();
+          showError("6b: view.when() resolved, ready=" + testView.ready);
+        } catch (err) {
+          showError("6c: view.when() REJECTED - " + err.message);
+        }
+
+
+          
         await profileElement.componentOnReady();
           //showError("7: profileElement ready");
         await searchElement.componentOnReady();
