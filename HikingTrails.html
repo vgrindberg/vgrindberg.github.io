@@ -83,7 +83,7 @@
             new ElevationLayer({ url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer" }))
           const baseVector = new VectorTileLayer({portalItem:{id: "dd271a466f1c4071abfd1128bdcfdd78"}});
           const pois = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/DC_Expanded_POI_List/MapServer/2", minScale: "25000" });
-          const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "4800"});
+          const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "24000"});
           const trails = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Parks/DCParks/MapServer/6", popupTemplate: trailsPopup, minScale: "200000"});
           const hazards = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Hosted/survey123_3829e8e36dd9437883d13977f525fd96_results/FeatureServer/0", popupTemplate: hazardPopup, minscale: "100000"})
           arcgisMap.map.add(baseVector);
