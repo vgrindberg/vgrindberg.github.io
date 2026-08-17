@@ -238,18 +238,14 @@
               returnGeometry: true
             });
 
-        try {
             if (result.features.length > 0) {
               await selectTrailFeature(result.features[0]);
             } else {
               console.warn(`No trail found with Number = ${numberValue}`);
             }
-          }
-        
-          if (trailParam) {
-            await zoomToTrailByNumber(trailParam);
-          } catch(err){
-              showError("16c: query FAILED - " + err.message);
+            if (trailParam) {
+              await zoomToTrailByNumber(trailParam);
+            }
           }
 
       </script>
