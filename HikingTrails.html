@@ -90,6 +90,7 @@
       
       <script type="module">
         const esriConfig = await $arcgis.import("@arcgis/core/config.js");
+          showError("2: esriConfig loaded");
         esriConfig.apiKey = "AAPTagkb2Zm4YSaB-Q_Eh-WC00w..jWWHN5Y5w0lptYDha8LVMK2mV9nZeFOccvtYcKio_4alSZzokCcY--7xgGtDAWM2hb6tLfq5YlJ29JqO1CADo81VLYMHgL0DplYFhNzzP-qqG8clYBI5kNpGl6wRaZgbJvx3fLT6bJjZ8sD-vAL3lBhBWBQ02pUJT31Q-fl-wuhUEFx1JCxMgNmVeqvm7yPXftsUsCzHpDZZC3RATuBIpvLo1pp-DwHRqQGVYPBAxZlz4OQNWpsRyj_urds.AT1_stwWKpCr";
         esriConfig.portalUrl = "https://gis.co.douglas.or.us/portal";
         const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
@@ -121,10 +122,14 @@
         const trailInfoEl = document.querySelector("#trailInfo");
   
         await arcgisMap.componentOnReady();
+          showError("3: arcgisMap ready");
         await profileElement.componentOnReady();
+          showError("4: profileElement ready");
         await searchElement.componentOnReady();
+          showError("5: searchElement ready");
         await popupComponent.componentOnReady();
         profileElement.referenceElement = arcgisMap;
+          showError("6: popupComponent ready");
         
         arcgisMap.map.ground.layers.add(
           new ElevationLayer({ url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer" }))
