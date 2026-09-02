@@ -154,9 +154,9 @@
           const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "24000"});
           const trails = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Parks/DCParks/MapServer/6", popupTemplate: trailsPopup, minScale: "200000"});
           const hazards = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Hosted/survey123_3829e8e36dd9437883d13977f525fd96_results/FeatureServer/0", popupTemplate: hazardPopup, minscale: "100000"})
-          const roads = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Roads/DC_Roads_All/MapServer/55", minScale: "100000"});
+          const roads = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Roads/DC_Roads_All/MapServer/53", minScale: "100000"});
           const wilderness = new FeatureLayer({url: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_Wilderness_01/MapServer/0", minScale: "1000000"});
-          const forest = new FeatureLayer({url: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_RegionBoundaries_01/MapServer/1", minScale: "1000000"});
+          #const forest = new FeatureLayer({url: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_RegionBoundaries_01/MapServer/1", minScale: "1000000"});
           
           arcgisMap.map.add(baseVector);
           arcgisMap.map.add(pois);
@@ -165,7 +165,7 @@
           arcgisMap.map.add(hazards);
           arcgisMap.map.add(roads);
           arcgisMap.map.add(wilderness);
-          arcgisMap.map.add(forest);
+          #arcgisMap.map.add(forest);
           //showError("12: all layers created and added");
 
           searchElement.sources = [{
