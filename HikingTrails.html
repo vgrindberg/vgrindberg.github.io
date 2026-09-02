@@ -124,23 +124,21 @@
         const searchElement = document.querySelector("arcgis-search");
         const trailInfoEl = document.querySelector("#trailInfo");
         const labelClass = {
-        symbol: {
-          type: "text", // autocasts as new TextSymbol()
-          color: "brown",
-          yoffset: 0,
-          font: {
-            family: "Tahoma", // autocasts as new Font()
-            size: 9,
-            weight: "bold",
-          },
-          haloColor: "",
-          haloSize: "1.5px",
-        },
-        labelPlacement: "center",
-        labelExpressionInfo: {
-          expression: "$feature.ROADNAME" + " " + "$feature.ROADNUM",
-        },
-      };
+            symbol: {
+                type: "text", // autocasts as new TextSymbol()
+                color: "brown",
+                yoffset: 0,
+                font: {
+                    family: "BC Sans Bold",
+                    size: 9,
+                    weight: "bold"},
+                haloColor: "brown",
+                haloSize: 1.5},
+            labelPlacement: "center",
+            labelExpressionInfo: {
+                expression: `$feature.ROADNAME $feature.ROADNUM`
+            },
+        };
 
           //showError("5: DOM queries done, trailParam=" + trailParam);
   
