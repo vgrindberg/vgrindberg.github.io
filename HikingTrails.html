@@ -123,6 +123,25 @@
         const profileElement = document.querySelector("arcgis-elevation-profile");
         const searchElement = document.querySelector("arcgis-search");
         const trailInfoEl = document.querySelector("#trailInfo");
+        const labelClass = {
+        symbol: {
+          type: "text", // autocasts as new TextSymbol()
+          color: "brown",
+          yoffset: 0,
+          font: {
+            family: "Tahoma", // autocasts as new Font()
+            size: 9,
+            weight: "bold",
+          },
+          haloColor: "",
+          haloSize: "1.5px",
+        },
+        labelPlacement: "center",
+        labelExpressionInfo: {
+          expression: "$feature.ROADNAME" + " " + $feature.ROADNUM,
+        },
+      };
+
           //showError("5: DOM queries done, trailParam=" + trailParam);
   
         await arcgisMap.componentOnReady();
@@ -154,7 +173,7 @@
           const places = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Common/PlaceParkDetails/MapServer/0", popupTemplate: placesPopup, minScale: "24000"});
           const trails = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Parks/DCParks/MapServer/6", popupTemplate: trailsPopup, minScale: "200000"});
           const hazards = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Hosted/survey123_3829e8e36dd9437883d13977f525fd96_results/FeatureServer/0", popupTemplate: hazardPopup, minscale: "100000"})
-          const roads = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Roads/DC_Roads_All/MapServer/53", minScale: "100000"});
+          const roads = new FeatureLayer({url: "https://gis.co.douglas.or.us/server/rest/services/Roads/DC_Roads_All/MapServer/53", labelingInfo: [labelClass], minScale: "100000"});
           const wilderness = new FeatureLayer({url: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_Wilderness_01/MapServer/0", minScale: "1000000"});
           //const forest = new FeatureLayer({url: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_RegionBoundaries_01/MapServer/1", minScale: "1000000"});
           
